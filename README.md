@@ -268,6 +268,27 @@ Set to `false` before deploying to production.
 
 ## Deployment
 
+### Cloudflare Pages (Recommended)
+
+1. **Build the project:**
+   ```bash
+   npm run build
+   ```
+
+2. **Deploy via Wrangler CLI:**
+   ```bash
+   npx wrangler pages deploy dist
+   ```
+
+3. **Or connect via Cloudflare Dashboard:**
+   - Go to [Cloudflare Pages](https://dash.cloudflare.com/pages)
+   - Connect your GitHub repository
+   - Set build command: `npm run build`
+   - Set output directory: `dist`
+   - Add environment variables:
+     - `VITE_SITE_URL`: Your production domain (e.g., `https://umar.ac`)
+     - Spotify credentials if using the widget
+
 ### Vercel
 
 ```bash

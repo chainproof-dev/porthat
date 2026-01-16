@@ -1,0 +1,7 @@
+name = "porthat"
+compatibility_date = "2024-11-01"
+pages_build_output_dir = "dist"
+
+# Environment variables (set these in Cloudflare dashboard for production)
+[vars]
+VITE_SITE_URL = "https://umar.ac"
