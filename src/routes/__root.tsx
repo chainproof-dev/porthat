@@ -1,49 +1,62 @@
 import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router";
 import appCss from "../styles.css?url";
 import portfolioData from "../data/data.json";
+import {
+  createSEOConfigFromProfile,
+  generateMetaTags,
+  generateLinkTags,
+} from "../lib/seo";
+import { generateHomePageSchemas } from "../lib/schema";
+import { JsonLd } from "../components/seo/JsonLd";
+import type { Profile } from "../types/portfolio";
 
-const { profile, roles } = portfolioData;
-const siteTitle = `${profile.name} | Portfolio`;
-const siteDescription = profile.bio;
-const siteUrl = import.meta.env.VITE_SITE_URL || "http://localhost:3000";
-const ogImage = `${siteUrl}/assets/ogimg.png`;
+// =============================================================================
+// SEO CONFIGURATION
+// =============================================================================
+
+const { profile, roles, socials } = portfolioData;
+const seoConfig = createSEOConfigFromProfile(profile as Profile);
+
+// Extract social URLs for schema sameAs
+const socialUrls = socials.map((s: { url: string }) => s.url);
+
+// Generate structured data schemas
+const schemas = generateHomePageSchemas(
+  profile as Profile,
+  seoConfig,
+  roles,
+  socialUrls
+);
+
+// =============================================================================
+// ROUTE DEFINITION
+// =============================================================================
 
 export const Route = createRootRoute({
   head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: siteTitle },
-      { name: "description", content: siteDescription },
-      { name: "author", content: profile.name },
-      { name: "keywords", content: roles.join(", ") },
-      { property: "og:type", content: "website" },
-      { property: "og:url", content: siteUrl },
-      { property: "og:title", content: siteTitle },
-      { property: "og:description", content: siteDescription },
-      { property: "og:image", content: ogImage },
-      { property: "og:site_name", content: profile.name },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:url", content: siteUrl },
-      { name: "twitter:title", content: siteTitle },
-      { name: "twitter:description", content: siteDescription },
-      { name: "twitter:image", content: ogImage },
-      { name: "theme-color", content: "#0a0a0a" },
-    ],
-    links: [
-      { rel: "stylesheet", href: appCss },
-      { rel: "icon", type: "image/x-icon", href: profile.avatar },
-      { rel: "apple-touch-icon", href: profile.avatar },
-    ],
+    meta: generateMetaTags(
+      {
+        title: profile.name,
+        description: profile.bio,
+        type: "profile",
+      },
+      seoConfig
+    ),
+    links: generateLinkTags(seoConfig, profile as Profile, appCss),
   }),
   shellComponent: RootDocument,
 });
+
+// =============================================================================
+// ROOT DOCUMENT COMPONENT
+// =============================================================================
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
         <HeadContent />
+        <JsonLd data={schemas} />
       </head>
       <body>{children}<Scripts /></body>
     </html>
