@@ -1,0 +1,257 @@
+{
+  "theme": "monochrome",
+  "github": "torvalds",
+  "illustration": true,
+  "profile": {
+    "name": "Lelouch vi Britannia",
+    "handle": "zero",
+    "avatar": "https://imgs.search.brave.com/llxNE6-IlXfe7sZMwozzEt1J3aKGPAZLcfWDMr3L8Vc/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJhY2Nlc3Mu/Y29tL2Z1bGwvNDE5/NTQwNC5qcGc",
+    "banner": "https://wallpapercave.com/wp/wp2883490.jpg",
+    "bio": "Revolutionary strategist and tactical genius. Wielder of the Power of Absolute Obedience. Fighting for a world where the weak are not oppressed.",
+    "location": "Area 11 (Japan)",
+    "resumeUrl": "#",
+    "email": "zero@blackknights.org"
+  },
+  "roles": [
+    "Master Strategist",
+    "Revolutionary Leader",
+    "Knightmare Pilot",
+    "Chess Grandmaster",
+    "Geass User"
+  ],
+  "socials": [
+    {
+      "name": "GitHub",
+      "url": "https://github.com/zero",
+      "icon": "github"
+    },
+    {
+      "name": "Twitter",
+      "url": "https://twitter.com/zero",
+      "icon": "twitter"
+    },
+    {
+      "name": "LinkedIn",
+      "url": "https://linkedin.com/in/zero",
+      "icon": "linkedin"
+    }
+  ],
+  "skills": [
+    {
+      "name": "Strategic Planning",
+      "icon": "brain",
+      "color": "#8B5CF6"
+    },
+    {
+      "name": "Tactical Analysis",
+      "icon": "target",
+      "color": "#EF4444"
+    },
+    {
+      "name": "Leadership",
+      "icon": "crown",
+      "color": "#F59E0B"
+    },
+    {
+      "name": "Chess",
+      "icon": "trophy",
+      "color": "#10B981"
+    },
+    {
+      "name": "Knightmare Piloting",
+      "icon": "gamepad",
+      "color": "#3B82F6"
+    },
+    {
+      "name": "Manipulation",
+      "icon": "message",
+      "color": "#EC4899"
+    },
+    {
+      "name": "Public Speaking",
+      "icon": "mic",
+      "color": "#06B6D4"
+    },
+    {
+      "name": "Geass Control",
+      "icon": "eye",
+      "color": "#DC2626"
+    }
+  ],
+  "experience": [
+    {
+      "company": "Black Knights",
+      "role": "Supreme Commander (Zero)",
+      "type": "Leadership",
+      "period": "2017 - 2018 a.t.b.",
+      "location": "Japan / Global",
+      "details": [
+        "Founded and led the Black Knights resistance organization against Britannian Empire",
+        "Orchestrated the liberation of Japan through strategic military operations",
+        "Unified resistance groups across the globe under a single command structure",
+        "Achieved chairman position of the United Federation of Nations"
+      ]
+    },
+    {
+      "company": "Holy Britannian Empire",
+      "role": "99th Emperor",
+      "type": "Monarchy",
+      "period": "2018 a.t.b.",
+      "location": "Pendragon",
+      "details": [
+        "Seized the throne through strategic manipulation and Geass",
+        "Implemented sweeping reforms to dismantle the aristocracy",
+        "Executed the Zero Requiem plan to bring world peace",
+        "United the world against a common enemy to end conflict"
+      ]
+    },
+    {
+      "company": "Ashford Academy",
+      "role": "Student Council Vice President",
+      "type": "Education",
+      "period": "2016 - 2018 a.t.b.",
+      "location": "Tokyo Settlement",
+      "details": [
+        "Maintained perfect academic standing while leading a double life",
+        "Organized school festivals and cultural events",
+        "Protected the identity of exiled royalty while attending classes"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "Ashford Academy",
+      "degree": "High School Diploma",
+      "field": "General Studies",
+      "period": "2015 - 2018 a.t.b.",
+      "location": "Tokyo Settlement, Area 11",
+      "grade": "Valedictorian",
+      "details": [
+        "Top academic performer across all subjects",
+        "Vice President of the Student Council",
+        "Champion of the school chess club"
+      ]
+    },
+    {
+      "institution": "Imperial Britannian Military Academy",
+      "degree": "Strategic Command Certification",
+      "field": "Military Strategy",
+      "period": "2010 - 2012 a.t.b.",
+      "location": "Pendragon, Britannia",
+      "details": [
+        "Trained in advanced tactical warfare and command structure",
+        "Studied Knightmare Frame combat theory",
+        "Excelled in psychological warfare techniques"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "1",
+      "title": "Zero Requiem",
+      "slug": "zero-requiem",
+      "description": "The ultimate plan to end all conflict by uniting the world against a common enemy, achieving lasting peace through sacrifice.",
+      "image": "https://wallpapercave.com/wp/4FBo5yQ.jpg",
+      "tags": [
+        "Strategy",
+        "Peace",
+        "Sacrifice"
+      ],
+      "github": null,
+      "demo": null,
+      "featured": true
+    },
+    {
+      "id": "2",
+      "title": "Black Knights Formation",
+      "slug": "black-knights",
+      "description": "Created a revolutionary military organization from scattered resistance groups, becoming the world's most powerful independent army.",
+      "image": "https://wallpapercave.com/wp/wp2883518.jpg",
+      "tags": [
+        "Leadership",
+        "Military",
+        "Revolution"
+      ],
+      "github": null,
+      "demo": null,
+      "featured": true
+    },
+    {
+      "id": "3",
+      "title": "United Federation of Nations",
+      "slug": "ufn",
+      "description": "Diplomatic achievement uniting 47 nations against the Britannian Empire, establishing a democratic world order.",
+      "image": "https://wallpapercave.com/wp/yO2TljR.jpg",
+      "tags": [
+        "Diplomacy",
+        "Politics",
+        "Unity"
+      ],
+      "github": null,
+      "demo": null,
+      "featured": true
+    },
+    {
+      "id": "4",
+      "title": "Geass Strategic Applications",
+      "slug": "geass-strategy",
+      "description": "Mastered the Power of Absolute Obedience, developing tactical frameworks for its ethical and strategic deployment.",
+      "image": "https://wallpapercave.com/wp/wp2883490.jpg",
+      "tags": [
+        "Geass",
+        "Power",
+        "Control"
+      ],
+      "github": null,
+      "demo": null,
+      "featured": true
+    }
+  ],
+  "blogs": [
+    {
+      "slug": "the-power-of-geass",
+      "title": "The Power of Geass: Understanding Absolute Obedience",
+      "date": "2018-03-15",
+      "excerpt": "An exploration of the Geass power, its origins from C.C., and the ethical implications of commanding absolute obedience.",
+      "tags": [
+        "Geass",
+        "Philosophy",
+        "Power"
+      ],
+      "coverImage": "https://wallpapercave.com/wp/wp2883497.jpg",
+      "readingTime": "5 min"
+    },
+    {
+      "slug": "strategic-warfare",
+      "title": "Strategic Warfare: Lessons from the Black Rebellion",
+      "date": "2018-02-20",
+      "excerpt": "Breaking down the tactical decisions that led to the success of the Black Rebellion and the liberation of Japan.",
+      "tags": [
+        "Strategy",
+        "Military",
+        "Tactics"
+      ],
+      "coverImage": "https://wallpapercave.com/wp/wp2883502.jpg",
+      "readingTime": "8 min"
+    },
+    {
+      "slug": "chess-and-war",
+      "title": "Chess and War: The Art of Sacrifice",
+      "date": "2018-01-10",
+      "excerpt": "How the principles of chess apply to real-world strategy, and why sometimes the king must lead from the front.",
+      "tags": [
+        "Chess",
+        "Leadership",
+        "Philosophy"
+      ],
+      "coverImage": "https://wallpapercave.com/wp/wp2883510.jpg",
+      "readingTime": "6 min"
+    }
+  ],
+  "quotes": [
+    "The only ones who should kill are those who are prepared to be killed.",
+    "If the king doesn't move, then his subjects won't follow.",
+    "What do you do when there is an evil you cannot defeat by just means?",
+    "I will not repent. This is my path, and I will walk it to the end."
+  ]
+}
