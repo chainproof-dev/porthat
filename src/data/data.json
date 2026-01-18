@@ -2,6 +2,11 @@
   "theme": "monochrome",
   "github": "umar0x",
   "illustration": true,
+  "blogConfig": {
+    "title": "Blog",
+    "subtitle": "Thoughts & Technical Writing",
+    "description": "Exploring topics in security research, kernel development, systems programming, and building privacy-first tools. Deep dives, tutorials, and practical insights."
+  },
   "profile": {
     "name": "Umar Pathan",
     "handle": "umar0x",

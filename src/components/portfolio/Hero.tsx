@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
-import { Download, Mail, Calendar, Sun, Moon } from "lucide-react";
+import { Download, Mail, Calendar, Sun, Moon, Waves } from "lucide-react";
 import { useTheme } from "../../context/ThemeContext";
 import { ANIMATION } from "../../lib/constants";
 import { getGradient } from "../../lib/themes";
@@ -14,7 +14,7 @@ interface HeroProps {
 }
 
 export default function Hero({ profile, roles, socials }: HeroProps) {
-  const { colors, mode, setMode } = useTheme();
+  const { colors, mode, setMode, fluidEnabled, setFluidEnabled } = useTheme();
   const [roleIndex, setRoleIndex] = useState(0);
 
   useEffect(() => {
@@ -29,16 +29,46 @@ export default function Hero({ profile, roles, socials }: HeroProps) {
       <motion.div variants={ANIMATION.fadeIn} className="relative mb-6">
         <div className="relative overflow-hidden rounded-2xl h-32 sm:h-40">
           <img src={profile.banner} alt="Banner" className="w-full h-full object-cover" />
-          <button
-            onClick={(e) => setMode(mode === "dark" ? "light" : "dark", e)}
-            className="absolute top-3 right-3 p-2 rounded-lg transition-colors backdrop-blur-sm hover:bg-white/30 cursor-pointer"
-            style={{
-              backgroundColor: "rgba(255,255,255,0.2)",
-              color: "#fff",
-            }}
-          >
-            {mode === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-          </button>
+
+          {/* Toggle Buttons Group */}
+          <div className="absolute top-3 right-3 flex items-center gap-1.5">
+            {/* Fluid Simulation Toggle */}
+            <motion.button
+              onClick={() => setFluidEnabled(!fluidEnabled)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="p-2 rounded-lg transition-all duration-200 backdrop-blur-sm cursor-pointer"
+              style={{
+                backgroundColor: fluidEnabled
+                  ? "rgba(255,255,255,0.25)"
+                  : "rgba(0,0,0,0.3)",
+                color: "#fff",
+              }}
+              aria-label={fluidEnabled ? "Disable fluid animation" : "Enable fluid animation"}
+              aria-pressed={fluidEnabled}
+              title={fluidEnabled ? "Disable fluid animation" : "Enable fluid animation"}
+            >
+              <Waves
+                className="w-4 h-4 transition-opacity duration-200"
+                style={{ opacity: fluidEnabled ? 1 : 0.5 }}
+              />
+            </motion.button>
+
+            {/* Dark/Light Mode Toggle */}
+            <motion.button
+              onClick={(e) => setMode(mode === "dark" ? "light" : "dark", e)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="p-2 rounded-lg transition-colors backdrop-blur-sm cursor-pointer"
+              style={{
+                backgroundColor: "rgba(255,255,255,0.2)",
+                color: "#fff",
+              }}
+              aria-label={mode === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            >
+              {mode === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </motion.button>
+          </div>
         </div>
         <div className="absolute -bottom-12 left-6 sm:left-8 z-20">
           <motion.div

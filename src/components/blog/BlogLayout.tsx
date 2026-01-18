@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowLeft, Sun, Moon } from "lucide-react";
+import { ArrowLeft, Sun, Moon, Waves } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { ThemeProvider, useTheme } from "../../context/ThemeContext";
 import { ANIMATION } from "../../lib/constants";
@@ -11,7 +11,7 @@ interface BlogLayoutProps {
 }
 
 function BlogLayoutContent({ children }: BlogLayoutProps) {
-    const { colors, mode, setMode } = useTheme();
+    const { colors, mode, setMode, fluidEnabled, setFluidEnabled } = useTheme();
 
     return (
         <div style={{ backgroundColor: colors.background, minHeight: "100vh" }}>
@@ -27,11 +27,9 @@ function BlogLayoutContent({ children }: BlogLayoutProps) {
             {/* Fluid background */}
             <FluidBackground
                 className="fixed inset-0 z-0"
+                enabled={fluidEnabled}
                 config={{
                     TRANSPARENT: true,
-                    BLOOM: true,
-                    SUNRAYS: true,
-                    DYE_RESOLUTION: 512,
                 }}
             />
 
@@ -68,16 +66,43 @@ function BlogLayoutContent({ children }: BlogLayoutProps) {
                         >
                             All Posts
                         </Link>
-                        <button
+
+                        {/* Fluid Toggle */}
+                        <motion.button
+                            onClick={() => setFluidEnabled(!fluidEnabled)}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="p-2 rounded-lg transition-colors cursor-pointer"
+                            style={{
+                                backgroundColor: fluidEnabled
+                                    ? (mode === "dark" ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)")
+                                    : (mode === "dark" ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.03)"),
+                                color: colors.foreground,
+                            }}
+                            aria-label={fluidEnabled ? "Disable fluid animation" : "Enable fluid animation"}
+                            aria-pressed={fluidEnabled}
+                            title={fluidEnabled ? "Disable fluid animation" : "Enable fluid animation"}
+                        >
+                            <Waves
+                                className="w-4 h-4 transition-opacity duration-200"
+                                style={{ opacity: fluidEnabled ? 1 : 0.4 }}
+                            />
+                        </motion.button>
+
+                        {/* Mode Toggle */}
+                        <motion.button
                             onClick={(e) => setMode(mode === "dark" ? "light" : "dark", e)}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
                             className="p-2 rounded-lg transition-colors cursor-pointer"
                             style={{
                                 backgroundColor: mode === "dark" ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)",
                                 color: colors.foreground,
                             }}
+                            aria-label={mode === "dark" ? "Switch to light mode" : "Switch to dark mode"}
                         >
                             {mode === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-                        </button>
+                        </motion.button>
                     </div>
                 </div>
             </motion.header>

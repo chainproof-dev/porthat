@@ -4,13 +4,14 @@ import { ANIMATION } from "../../lib/constants";
 import { Hero, Experience, Education, Projects, SkillSlider, Blog, Footer, GitHubChart, SpotifyWidget, IllustrationOverlay } from "./index";
 import type { PortfolioData } from "../../types/portfolio";
 import FluidBackground from "../FluidBackground";
+import ErrorBoundary from "../common/ErrorBoundary";
 
 interface PortfolioProps {
   data: PortfolioData;
 }
 
 function PortfolioContent({ data }: PortfolioProps) {
-  const { colors } = useTheme();
+  const { colors, fluidEnabled } = useTheme();
 
   return (
     <div style={{ backgroundColor: colors.background, minHeight: "100vh" }}>
@@ -23,11 +24,9 @@ function PortfolioContent({ data }: PortfolioProps) {
       />
       <FluidBackground
         className="fixed inset-0 z-0"
+        enabled={fluidEnabled}
         config={{
           TRANSPARENT: true,
-          BLOOM: true,
-          SUNRAYS: true,
-          DYE_RESOLUTION: 512,
         }}
       />
       <motion.div
@@ -61,8 +60,10 @@ function PortfolioContent({ data }: PortfolioProps) {
 
 export default function Portfolio({ data }: PortfolioProps) {
   return (
-    <ThemeProvider initialTheme={data.theme}>
-      <PortfolioContent data={data} />
-    </ThemeProvider>
+    <ErrorBoundary>
+      <ThemeProvider initialTheme={data.theme}>
+        <PortfolioContent data={data} />
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }

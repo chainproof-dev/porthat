@@ -15,7 +15,18 @@ import { JsonLd } from "../../components/seo/JsonLd";
 import blogsData from "../../data/blogs.json";
 import portfolioData from "../../data/data.json";
 import appCss from "../../styles.css?url";
-import type { Profile, BlogPost } from "../../types/portfolio";
+import type { Profile, BlogPost, BlogConfig } from "../../types/portfolio";
+
+// =============================================================================
+// BLOG CONFIG
+// =============================================================================
+
+// Extract blog configuration with sensible defaults for static builds
+const blogConfig: BlogConfig = portfolioData.blogConfig ?? {
+    title: "Blog",
+    subtitle: "Thoughts & Technical Writing",
+    description: "Technical articles and insights.",
+};
 
 // =============================================================================
 // UTILITIES
@@ -148,10 +159,10 @@ function BlogListingPage() {
                         </div>
                         <div>
                             <h1 className="text-2xl sm:text-3xl font-bold" style={{ color: colors.foreground }}>
-                                Blog
+                                {blogConfig.title}
                             </h1>
                             <p className="text-sm" style={{ color: `${colors.foreground}80` }}>
-                                Thoughts & Technical Writing
+                                {blogConfig.subtitle}
                             </p>
                         </div>
                     </div>
@@ -159,8 +170,7 @@ function BlogListingPage() {
                         className="text-sm sm:text-base leading-relaxed max-w-2xl mb-6"
                         style={{ color: `${colors.foreground}99` }}
                     >
-                        Exploring topics in security research, kernel development, systems programming,
-                        and building privacy-first tools. Deep dives, tutorials, and practical insights.
+                        {blogConfig.description}
                     </p>
 
                     {/* Blog Stats */}

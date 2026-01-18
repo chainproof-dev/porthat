@@ -57,8 +57,38 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
         <JsonLd data={schemas} />
+        {/* Skip to content link styles */}
+        <style>{`
+          .skip-to-content {
+            position: absolute;
+            left: -9999px;
+            z-index: 9999;
+            padding: 0.75rem 1rem;
+            background: #0a0a0a;
+            color: #fafafa;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-radius: 0 0 0.5rem 0;
+          }
+          .skip-to-content:focus {
+            left: 0;
+            top: 0;
+            outline: 2px solid #fafafa;
+            outline-offset: 2px;
+          }
+        `}</style>
       </head>
-      <body>{children}<Scripts /></body>
+      <body>
+        {/* Skip to Content Link for Accessibility */}
+        <a href="#main-content" className="skip-to-content">
+          Skip to main content
+        </a>
+        <main id="main-content">
+          {children}
+        </main>
+        <Scripts />
+      </body>
     </html>
   );
 }

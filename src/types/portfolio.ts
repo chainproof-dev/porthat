@@ -65,10 +65,20 @@ export interface Education {
   details?: string[];
 }
 
+export interface BlogConfig {
+  /** Blog page title */
+  title: string;
+  /** Blog page subtitle */
+  subtitle: string;
+  /** Blog page description/tagline */
+  description: string;
+}
+
 export interface PortfolioData {
   theme: string;
   github: string;
   illustration?: boolean;
+  blogConfig?: BlogConfig;
   profile: Profile;
   roles: string[];
   socials: Social[];

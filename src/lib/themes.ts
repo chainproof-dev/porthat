@@ -204,3 +204,81 @@ export function getSectionGradient(colors: ThemeColors, mode: "light" | "dark"):
 export function getGlowColor(colors: ThemeColors, mode: "light" | "dark"): string {
   return mode === "dark" ? `${colors.primary}30` : `${colors.highlight}40`;
 }
+
+// =============================================================================
+// COMMON STYLE UTILITIES
+// =============================================================================
+
+type Mode = "light" | "dark";
+
+/**
+ * Get card background color based on mode
+ */
+export function getCardBackground(mode: Mode): string {
+  return mode === "dark"
+    ? "rgba(255,255,255,0.02)"
+    : "rgba(255,255,255,0.6)";
+}
+
+/**
+ * Get border color based on mode
+ */
+export function getBorderColor(mode: Mode): string {
+  return mode === "dark"
+    ? "rgba(255,255,255,0.08)"
+    : "rgba(0,0,0,0.05)";
+}
+
+/**
+ * Get hover background color based on mode
+ */
+export function getHoverBackground(mode: Mode): string {
+  return mode === "dark"
+    ? "rgba(255,255,255,0.1)"
+    : "rgba(0,0,0,0.05)";
+}
+
+/**
+ * Get subtle background color for badges/chips
+ */
+export function getSubtleBackground(mode: Mode): string {
+  return mode === "dark"
+    ? "rgba(255,255,255,0.05)"
+    : "rgba(0,0,0,0.05)";
+}
+
+/**
+ * Get text color with configurable opacity
+ */
+export function getTextOpacity(foreground: string, opacity: number): string {
+  // Convert opacity 0-100 to hex
+  const hex = Math.round(opacity * 2.55).toString(16).padStart(2, "0");
+  return `${foreground}${hex}`;
+}
+
+/**
+ * Get interactive button style object
+ */
+export function getButtonStyle(mode: Mode, variant: "primary" | "secondary" | "ghost" = "ghost"): React.CSSProperties {
+  if (variant === "primary") {
+    return {
+      backgroundColor: mode === "dark" ? "#fafafa" : "#0a0a0a",
+      color: mode === "dark" ? "#0a0a0a" : "#fafafa",
+    };
+  }
+
+  if (variant === "secondary") {
+    return {
+      backgroundColor: "transparent",
+      border: `1px solid ${getBorderColor(mode)}`,
+      color: mode === "dark" ? "#fafafa" : "#0a0a0a",
+    };
+  }
+
+  // Ghost variant
+  return {
+    backgroundColor: getSubtleBackground(mode),
+    color: mode === "dark" ? "rgba(250,250,250,0.7)" : "rgba(10,10,10,0.7)",
+  };
+}
+

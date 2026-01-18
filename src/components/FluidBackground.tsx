@@ -1,43 +1,123 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import FluidSimulation, { FluidConfig } from '../lib/fluidSimulation';
 
-interface Props {
+// =============================================================================
+// TYPES
+// =============================================================================
+
+interface FluidBackgroundProps {
+    /** Additional CSS classes */
     className?: string;
+    /** Partial configuration overrides */
     config?: Partial<FluidConfig>;
+    /** Whether the fluid simulation is enabled */
+    enabled?: boolean;
 }
 
-export default function FluidBackground({ className, config }: Props) {
+// =============================================================================
+// CONSTANTS
+// =============================================================================
+
+const MOBILE_BREAKPOINT = 768;
+
+/**
+ * Mobile-optimized configuration for better performance
+ * Significantly reduces GPU load on mobile devices
+ */
+const MOBILE_CONFIG: Partial<FluidConfig> = {
+    DYE_RESOLUTION: 256,      // Reduced from 512
+    SIM_RESOLUTION: 64,       // Reduced from 128
+    SPLAT_RADIUS: 0.5,        // Larger splats for touch
+    SPLAT_FORCE: 4000,
+    BLOOM: false,             // Disable expensive bloom on mobile
+    SUNRAYS: false,           // Disable sunrays on mobile
+    BLOOM_ITERATIONS: 2,
+    BLOOM_RESOLUTION: 64,
+    PRESSURE_ITERATIONS: 10,  // Reduce iterations
+};
+
+/**
+ * Desktop configuration with full visual quality
+ */
+const DESKTOP_CONFIG: Partial<FluidConfig> = {
+    DYE_RESOLUTION: 512,
+    SIM_RESOLUTION: 128,
+};
+
+// =============================================================================
+// UTILITIES
+// =============================================================================
+
+/**
+ * Detect mobile device based on viewport width
+ */
+function isMobile(): boolean {
+    if (typeof window === 'undefined') return false;
+    return window.innerWidth < MOBILE_BREAKPOINT;
+}
+
+// =============================================================================
+// COMPONENT
+// =============================================================================
+
+export default function FluidBackground({
+    className,
+    config,
+    enabled = true
+}: FluidBackgroundProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const fluidRef = useRef<FluidSimulation | null>(null);
+    const [isVisible, setIsVisible] = useState(false);
 
+    // Intersection observer for lazy loading
     useEffect(() => {
         const canvas = canvasRef.current;
-        if (!canvas) return;
+        if (!canvas || !enabled) return;
 
-        // Determine mobile/desktop config adjustments
-        const isMobile = window.innerWidth < 768;
-        const mobileConfig: Partial<FluidConfig> = isMobile ? {
-            DYE_RESOLUTION: 512,
-            SIM_RESOLUTION: 128,
-            SPLAT_RADIUS: 0.4, // Larger splats for touch
-            SPLAT_FORCE: 5000,
-            BLOOM_ITERATIONS: 4, // Reduce work on mobile
-            BLOOM_RESOLUTION: 128, // Lower bloom resolution
-        } : {};
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    setIsVisible(entry.isIntersecting);
+                });
+            },
+            { threshold: 0.1 }
+        );
 
-        // Initialize simulation with merged config
-        const finalConfig = { ...config, ...mobileConfig };
+        observer.observe(canvas);
+        return () => observer.disconnect();
+    }, [enabled]);
+
+    // Initialize/destroy fluid simulation based on visibility and enabled state
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas || !enabled || !isVisible) {
+            // Cleanup when disabled or not visible
+            if (fluidRef.current) {
+                fluidRef.current.destroy();
+                fluidRef.current = null;
+            }
+            return;
+        }
+
+        // Already initialized
+        if (fluidRef.current) return;
+
+        // Determine device-appropriate config
+        const deviceConfig = isMobile() ? MOBILE_CONFIG : DESKTOP_CONFIG;
+        const finalConfig = { ...deviceConfig, ...config };
+
+        // Initialize simulation
         const fluid = new FluidSimulation(canvas, finalConfig);
         fluidRef.current = fluid;
         fluid.init();
 
-        // Event listeners
+        // Event handlers with proper coordinate mapping
         const handleMouseDown = (e: MouseEvent) => {
-            fluid.handlePointerDown(-1, e.offsetX, e.offsetY);
+            fluid.handlePointerDown(-1, e.clientX, e.clientY);
         };
 
         const handleMouseMove = (e: MouseEvent) => {
-            fluid.handlePointerMove(-1, e.offsetX, e.offsetY);
+            fluid.handlePointerMove(-1, e.clientX, e.clientY);
         };
 
         const handleMouseUp = () => {
@@ -45,20 +125,13 @@ export default function FluidBackground({ className, config }: Props) {
         };
 
         const handleTouchStart = (e: TouchEvent) => {
-            // e.preventDefault(); // allow scroll
             for (let i = 0; i < e.targetTouches.length; i++) {
                 const t = e.targetTouches[i];
-                // Touch coordinates need to be mapped to client or offset
-                // Since canvas is fixed 100vw/100vh, clientX/Y roughly equals offset if no scrolling involved?
-                // Wait, if we scroll, clientY changes? No, clientY is viewport relative. 
-                // Fluid canvas is fixed to viewport. So clientX/Y is correct relative to canvas!
-                // offset coordinates in touch events are not standard.
                 fluid.handlePointerDown(t.identifier, t.clientX, t.clientY);
             }
         };
 
         const handleTouchMove = (e: TouchEvent) => {
-            // e.preventDefault();
             for (let i = 0; i < e.targetTouches.length; i++) {
                 const t = e.targetTouches[i];
                 fluid.handlePointerMove(t.identifier, t.clientX, t.clientY);
@@ -72,32 +145,19 @@ export default function FluidBackground({ className, config }: Props) {
             }
         };
 
-        // We add listeners to window or canvas?
-        // If canvas covers everything, canvas is fine.
-        // But if we want scroll, the canvas is in the background. 
-        // IF content is ON TOP of canvas, the canvas won't receive events if content has background or handles them.
-        // BUT we want simultaneous.
-        // One way: `pointer-events: none` on content? No, need to click links.
-        // `pointer-events: none` on Canvas? Then canvas gets NO events.
-
-        // Solution:
-        // 1. Canvas is `pointer-events: auto`.
-        // 2. Content is `pointer-events: auto`.
-        // We attach listeners to the WINDOW or a shared container to capture events for the fluid, 
-        // PASSING them through to the fluid simulation regardless of what was clicked.
-        // However, coordinate transformation is needed.
-
+        // Attach global listeners for interaction anywhere
         window.addEventListener('mousedown', handleMouseDown);
         window.addEventListener('mousemove', handleMouseMove);
         window.addEventListener('mouseup', handleMouseUp);
-
-        // For touch, if we want scroll, we bind passively.
-        window.addEventListener('touchstart', handleTouchStart, { passive: false });
-        window.addEventListener('touchmove', handleTouchMove, { passive: false });
+        window.addEventListener('touchstart', handleTouchStart, { passive: true });
+        window.addEventListener('touchmove', handleTouchMove, { passive: true });
         window.addEventListener('touchend', handleTouchEnd);
 
         return () => {
-            fluid.destroy();
+            if (fluidRef.current) {
+                fluidRef.current.destroy();
+                fluidRef.current = null;
+            }
             window.removeEventListener('mousedown', handleMouseDown);
             window.removeEventListener('mousemove', handleMouseMove);
             window.removeEventListener('mouseup', handleMouseUp);
@@ -105,9 +165,12 @@ export default function FluidBackground({ className, config }: Props) {
             window.removeEventListener('touchmove', handleTouchMove);
             window.removeEventListener('touchend', handleTouchEnd);
         };
-    }, [config]);
+    }, [config, enabled, isVisible]);
 
-    // Handle config updates if needed? For now, re-init on mount is simple.
+    // Don't render canvas at all when disabled (saves GPU resources)
+    if (!enabled) {
+        return null;
+    }
 
     return (
         <canvas
@@ -116,8 +179,9 @@ export default function FluidBackground({ className, config }: Props) {
             style={{
                 width: '100vw',
                 height: '100vh',
-                display: 'block'
+                display: 'block',
             }}
+            aria-hidden="true"
         />
     );
 }
