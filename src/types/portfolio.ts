@@ -50,6 +50,9 @@ export interface BlogPost {
   tags: string[];
   coverImage?: string;
   readingTime?: string;
+  content?: string;
+  author?: string;
+  metaDescription?: string;
 }
 
 export interface Education {

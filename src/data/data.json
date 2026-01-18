@@ -120,7 +120,60 @@
       "featured": true
     }
   ],
-  "blogs": [],
+  "blogs": [
+    {
+      "slug": "understanding-linux-kernel-security",
+      "title": "Understanding Linux Kernel Security: A Deep Dive into Modern Defenses",
+      "date": "2026-01-10",
+      "excerpt": "Explore the multi-layered security architecture of the Linux kernel, from KASLR and SMEP to the latest mitigation techniques protecting systems worldwide.",
+      "tags": [
+        "Security",
+        "Linux",
+        "Kernel"
+      ],
+      "coverImage": "/assets/gradient1.jpg",
+      "readingTime": "8 min read"
+    },
+    {
+      "slug": "high-performance-rust-systems",
+      "title": "Building High-Performance Systems in Rust: Zero-Cost Abstractions in Practice",
+      "date": "2026-01-05",
+      "excerpt": "Learn how Rust's zero-cost abstractions enable writing high-level code that compiles to blazingly fast machine code, with real-world performance optimization techniques.",
+      "tags": [
+        "Rust",
+        "Performance",
+        "Systems"
+      ],
+      "coverImage": "/assets/gradient2.jpg",
+      "readingTime": "10 min read"
+    },
+    {
+      "slug": "reverse-engineering-fundamentals",
+      "title": "Reverse Engineering Fundamentals: From Binary to Understanding",
+      "date": "2025-12-28",
+      "excerpt": "A practical guide to reverse engineering binaries, covering disassembly, decompilation, and the mental models needed to understand compiled code.",
+      "tags": [
+        "Reverse Engineering",
+        "Security",
+        "Assembly"
+      ],
+      "coverImage": "/assets/gradient3.jpg",
+      "readingTime": "12 min read"
+    },
+    {
+      "slug": "privacy-first-development",
+      "title": "Privacy-First Development: Building Tools That Respect Users",
+      "date": "2025-12-20",
+      "excerpt": "Practical principles and patterns for building software that puts user privacy first, from local-first architectures to end-to-end encryption.",
+      "tags": [
+        "Privacy",
+        "Architecture",
+        "Best Practices"
+      ],
+      "coverImage": "/assets/gradient4.jpg",
+      "readingTime": "7 min read"
+    }
+  ],
   "quotes": [
     "By believing passionately in something that still does not exist, we create it."
   ]
