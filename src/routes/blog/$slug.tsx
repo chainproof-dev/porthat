@@ -1,8 +1,8 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { Calendar, Clock, ArrowLeft, Share2, Tag } from "lucide-react";
+import { Calendar, Clock, ArrowLeft, Tag } from "lucide-react";
 import { Link } from "@tanstack/react-router";
-import { BlogContent, TableOfContents } from "../../components/blog";
+import { BlogContent, TableOfContents, ReadingProgress, ShareButtons, CommentsPlaceholder } from "../../components/blog";
 import { useTheme } from "../../context/ThemeContext";
 import { ANIMATION } from "../../lib/constants";
 import { getSectionGradient, getGlowColor } from "../../lib/themes";
@@ -81,27 +81,21 @@ function BlogPostContent() {
         .filter((b) => b.slug !== blog.slug && b.tags.some((t) => blog.tags.includes(t)))
         .slice(0, 2);
 
-    const handleShare = async () => {
-        const url = `${window.location.origin}/blog/${blog.slug}`;
-        if (navigator.share) {
-            try {
-                await navigator.share({
-                    title: blog.title,
-                    text: blog.excerpt,
-                    url,
-                });
-            } catch {
-                // User cancelled or error
-            }
-        } else {
-            // Fallback: copy to clipboard
-            await navigator.clipboard.writeText(url);
-            // Could show a toast here
-        }
-    };
+    // Calculate reading time dynamically
+    const wordCount = blog.content ? blog.content.trim().split(/\s+/).length : 0;
+    const readingTime = Math.ceil(wordCount / 200);
+    const displayReadingTime = blog.readingTime || `${readingTime} min read`;
+
+    // Get current URL for sharing
+    const shareUrl = typeof window !== "undefined"
+        ? `${window.location.origin}/blog/${blog.slug}`
+        : `${seoConfig.siteUrl}/blog/${blog.slug}`;
 
     return (
         <>
+            {/* Reading Progress Indicator */}
+            <ReadingProgress />
+
             {/* JSON-LD Schemas */}
             <JsonLd data={[articleSchema, breadcrumbSchema]} />
 
@@ -170,12 +164,10 @@ function BlogPostContent() {
                         <Calendar className="w-4 h-4" />
                         <time dateTime={blog.date}>{blog.date}</time>
                     </div>
-                    {blog.readingTime && (
-                        <div className="flex items-center gap-2 text-sm" style={{ color: `${colors.foreground}80` }}>
-                            <Clock className="w-4 h-4" />
-                            <span>{blog.readingTime}</span>
-                        </div>
-                    )}
+                    <div className="flex items-center gap-2 text-sm" style={{ color: `${colors.foreground}80` }}>
+                        <Clock className="w-4 h-4" />
+                        <span>{displayReadingTime}</span>
+                    </div>
                     {blog.author && (
                         <div className="text-sm" style={{ color: `${colors.foreground}80` }}>
                             By <span className="font-medium" style={{ color: colors.foreground }}>{blog.author}</span>
@@ -184,17 +176,11 @@ function BlogPostContent() {
                 </div>
 
                 {/* Share Button */}
-                <button
-                    onClick={handleShare}
-                    className="inline-flex items-center gap-2 text-sm px-4 py-2 rounded-xl transition-colors cursor-pointer"
-                    style={{
-                        backgroundColor: mode === "dark" ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)",
-                        color: `${colors.foreground}99`,
-                    }}
-                >
-                    <Share2 className="w-4 h-4" />
-                    Share
-                </button>
+                <ShareButtons
+                    title={blog.title}
+                    url={shareUrl}
+                    description={blog.excerpt}
+                />
             </motion.header>
 
             {/* Article Content with TOC */}
@@ -274,6 +260,9 @@ function BlogPostContent() {
                     </div>
                 </motion.section>
             )}
+
+            {/* Comments Section */}
+            <CommentsPlaceholder />
 
             {/* Back to Blog */}
             <motion.div variants={ANIMATION.fadeIn} className="mt-8 pt-6 border-t" style={{ borderColor: mode === "dark" ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)" }}>

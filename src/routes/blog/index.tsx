@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { BookOpen, TrendingUp, Clock, Calendar } from "lucide-react";
-import { BlogCard } from "../../components/blog";
+import { BlogCard, BlogSearch } from "../../components/blog";
 import { useTheme } from "../../context/ThemeContext";
 import { ANIMATION } from "../../lib/constants";
 import { getSectionGradient, getGlowColor } from "../../lib/themes";
@@ -104,9 +105,16 @@ export const Route = createFileRoute("/blog/")({
 
 function BlogListingPage() {
     const { colors, mode } = useTheme();
+    const [filteredBlogs, setFilteredBlogs] = useState<BlogPost[]>(blogs);
 
-    const featuredBlogs = blogs.slice(0, 2);
-    const remainingBlogs = blogs.slice(2);
+    // Memoized filtered results
+    const displayedBlogs = useMemo(() => {
+        const featured = filteredBlogs.slice(0, 2);
+        const remaining = filteredBlogs.slice(2);
+        return { featured, remaining };
+    }, [filteredBlogs]);
+
+    const isFiltered = filteredBlogs.length !== blogs.length;
 
     return (
         <>
@@ -118,7 +126,7 @@ function BlogListingPage() {
                 variants={ANIMATION.fadeIn}
                 initial="hidden"
                 animate="visible"
-                className="mb-8 sm:mb-12 relative overflow-hidden rounded-2xl p-6 sm:p-8 backdrop-blur-xl border"
+                className="mb-8 sm:mb-10 relative overflow-hidden rounded-2xl p-6 sm:p-8 backdrop-blur-xl border"
                 style={{
                     background: getSectionGradient(colors, mode),
                     borderColor: mode === "dark" ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.05)",
@@ -209,31 +217,21 @@ function BlogListingPage() {
                 </div>
             </motion.section>
 
-            {/* Topics/Tags Filter */}
+            {/* Search and Filter */}
             <motion.section
                 variants={ANIMATION.fadeIn}
                 initial="hidden"
                 animate="visible"
-                className="mb-6"
             >
-                <div className="flex flex-wrap gap-2">
-                    {allTags.map((tag) => (
-                        <span
-                            key={tag}
-                            className="text-xs px-3 py-1.5 rounded-lg font-medium cursor-pointer transition-all hover:scale-105"
-                            style={{
-                                backgroundColor: mode === "dark" ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.05)",
-                                color: `${colors.foreground}cc`,
-                            }}
-                        >
-                            {tag}
-                        </span>
-                    ))}
-                </div>
+                <BlogSearch
+                    blogs={blogs}
+                    onFilter={setFilteredBlogs}
+                    allTags={allTags}
+                />
             </motion.section>
 
-            {/* Featured Posts */}
-            {featuredBlogs.length > 0 && (
+            {/* Featured Posts (only when not filtering) */}
+            {!isFiltered && displayedBlogs.featured.length > 0 && (
                 <motion.section
                     className="mb-8"
                     variants={ANIMATION.fadeIn}
@@ -256,15 +254,15 @@ function BlogListingPage() {
                         initial="hidden"
                         animate="visible"
                     >
-                        {featuredBlogs.map((blog, index) => (
+                        {displayedBlogs.featured.map((blog, index) => (
                             <BlogCard key={blog.slug} blog={blog} index={index} featured />
                         ))}
                     </motion.div>
                 </motion.section>
             )}
 
-            {/* All Posts */}
-            {remainingBlogs.length > 0 && (
+            {/* All Posts / Search Results */}
+            {(isFiltered ? filteredBlogs : displayedBlogs.remaining).length > 0 && (
                 <motion.section
                     variants={ANIMATION.fadeIn}
                     initial="hidden"
@@ -278,7 +276,7 @@ function BlogListingPage() {
                             className="h-5 w-1 rounded-full"
                             style={{ background: `linear-gradient(to bottom, ${colors.secondary}, ${colors.primary})` }}
                         />
-                        All Posts
+                        {isFiltered ? "Search Results" : "All Posts"}
                     </h2>
                     <motion.div
                         className="space-y-3"
@@ -286,15 +284,15 @@ function BlogListingPage() {
                         initial="hidden"
                         animate="visible"
                     >
-                        {remainingBlogs.map((blog, index) => (
-                            <BlogCard key={blog.slug} blog={blog} index={index + 2} />
+                        {(isFiltered ? filteredBlogs : displayedBlogs.remaining).map((blog, index) => (
+                            <BlogCard key={blog.slug} blog={blog} index={index} />
                         ))}
                     </motion.div>
                 </motion.section>
             )}
 
             {/* Empty State */}
-            {blogs.length === 0 && (
+            {filteredBlogs.length === 0 && (
                 <motion.div
                     variants={ANIMATION.fadeIn}
                     initial="hidden"
@@ -310,10 +308,10 @@ function BlogListingPage() {
                         style={{ color: `${colors.foreground}40` }}
                     />
                     <p className="text-lg font-medium mb-2" style={{ color: colors.foreground }}>
-                        No posts yet
+                        {isFiltered ? "No matching posts" : "No posts yet"}
                     </p>
                     <p className="text-sm" style={{ color: `${colors.foreground}66` }}>
-                        Check back soon for new articles!
+                        {isFiltered ? "Try adjusting your search or filters" : "Check back soon for new articles!"}
                     </p>
                 </motion.div>
             )}
