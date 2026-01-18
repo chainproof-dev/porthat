@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, X, Filter } from "lucide-react";
+import Fuse from "fuse.js";
 import { useTheme } from "../../context/ThemeContext";
 import type { BlogPost } from "../../types/portfolio";
 
@@ -12,7 +13,7 @@ interface BlogSearchProps {
 
 /**
  * Blog search and filter component
- * Supports text search and tag filtering with debounced input
+ * Supports fuzzy search (Fuse.js) and tag filtering
  */
 export default function BlogSearch({ blogs, onFilter, allTags }: BlogSearchProps) {
     const { colors, mode } = useTheme();
@@ -20,22 +21,32 @@ export default function BlogSearch({ blogs, onFilter, allTags }: BlogSearchProps
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const [showFilters, setShowFilters] = useState(false);
 
-    // Debounced filtering
+    // Initialize Fuse instance
+    const fuse = useMemo(() => {
+        return new Fuse(blogs, {
+            keys: [
+                { name: "title", weight: 0.7 },
+                { name: "excerpt", weight: 0.3 },
+                { name: "tags", weight: 0.2 },
+                { name: "content", weight: 0.1 }
+            ],
+            threshold: 0.4, // 0.0 = perfect match, 1.0 = match anything
+            includeScore: true,
+            ignoreLocation: true // Search anywhere in the string
+        });
+    }, [blogs]);
+
+    // Filtered results
     const filteredBlogs = useMemo(() => {
         let result = blogs;
 
-        // Text search
+        // Fuzzy search
         if (query.trim()) {
-            const searchLower = query.toLowerCase();
-            result = result.filter(
-                (blog) =>
-                    blog.title.toLowerCase().includes(searchLower) ||
-                    blog.excerpt.toLowerCase().includes(searchLower) ||
-                    blog.tags.some((tag) => tag.toLowerCase().includes(searchLower))
-            );
+            const searchResults = fuse.search(query);
+            result = searchResults.map(res => res.item);
         }
 
-        // Tag filtering
+        // Tag filtering (AND logic with search)
         if (selectedTags.length > 0) {
             result = result.filter((blog) =>
                 selectedTags.some((tag) => blog.tags.includes(tag))
@@ -43,7 +54,7 @@ export default function BlogSearch({ blogs, onFilter, allTags }: BlogSearchProps
         }
 
         return result;
-    }, [blogs, query, selectedTags]);
+    }, [blogs, query, selectedTags, fuse]);
 
     // Notify parent of filtered results
     const handleFilter = useCallback(() => {

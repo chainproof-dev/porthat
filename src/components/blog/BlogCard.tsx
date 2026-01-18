@@ -1,8 +1,10 @@
+import { memo } from "react";
 import { motion } from "framer-motion";
 import { Clock, MoveUpRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { useTheme } from "../../context/ThemeContext";
 import { ANIMATION } from "../../lib/constants";
+import { getCardBackground, getBorderColor } from "../../lib/themes";
 import type { BlogPost } from "../../types/portfolio";
 
 const GRADIENT_IMAGES = [
@@ -18,7 +20,7 @@ interface BlogCardProps {
     featured?: boolean;
 }
 
-export default function BlogCard({ blog, index, featured = false }: BlogCardProps) {
+function BlogCard({ blog, index, featured = false }: BlogCardProps) {
     const { colors, mode } = useTheme();
 
     if (featured) {
@@ -33,8 +35,8 @@ export default function BlogCard({ blog, index, featured = false }: BlogCardProp
                         whileHover={{ y: -4 }}
                         className="relative overflow-hidden rounded-2xl border backdrop-blur-xl transition-all duration-300"
                         style={{
-                            backgroundColor: mode === "dark" ? "rgba(255,255,255,0.03)" : "rgba(255,255,255,0.6)",
-                            borderColor: mode === "dark" ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.05)",
+                            backgroundColor: getCardBackground(mode),
+                            borderColor: getBorderColor(mode),
                         }}
                     >
                         {/* Cover image */}
@@ -116,8 +118,8 @@ export default function BlogCard({ blog, index, featured = false }: BlogCardProp
                     whileHover={{ x: 4 }}
                     className="flex gap-4 rounded-xl border p-3 sm:p-4 transition-all backdrop-blur-md"
                     style={{
-                        backgroundColor: mode === "dark" ? "rgba(255,255,255,0.03)" : "rgba(255,255,255,0.5)",
-                        borderColor: mode === "dark" ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.05)",
+                        backgroundColor: getCardBackground(mode),
+                        borderColor: getBorderColor(mode),
                     }}
                     onMouseEnter={(e) => {
                         e.currentTarget.style.borderColor = `${colors.primary}50`;
@@ -191,3 +193,5 @@ export default function BlogCard({ blog, index, featured = false }: BlogCardProp
         </motion.div>
     );
 }
+
+export default memo(BlogCard);

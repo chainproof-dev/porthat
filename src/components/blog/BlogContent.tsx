@@ -15,7 +15,9 @@ function generateHeadingId(text: string): string {
         .replace(/(^-|-$)/g, "");
 }
 
-// Code block component with copy functionality
+import { Highlight, themes } from "prism-react-renderer";
+
+// Code block component with syntax highlighting and copy functionality
 function CodeBlock({
     content,
     language,
@@ -52,7 +54,7 @@ function CodeBlock({
             {/* Language badge */}
             {language && (
                 <div
-                    className="absolute top-0 left-4 px-2 py-0.5 text-[10px] font-medium rounded-b-md"
+                    className="absolute top-0 left-4 px-2 py-0.5 text-[10px] font-medium rounded-b-md z-10"
                     style={{
                         backgroundColor: mode === "dark" ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)",
                         color: `${colors.foreground}80`,
@@ -67,7 +69,7 @@ function CodeBlock({
                 onClick={handleCopy}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="absolute top-2 right-2 p-2 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer"
+                className="absolute top-2 right-2 p-2 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer z-10"
                 style={{
                     backgroundColor: mode === "dark" ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)",
                     color: copied ? colors.primary : `${colors.foreground}80`,
@@ -81,17 +83,30 @@ function CodeBlock({
                 )}
             </motion.button>
 
-            <pre
-                className="p-4 pt-8 rounded-xl overflow-x-auto text-sm"
-                style={{
-                    backgroundColor: mode === "dark" ? "rgba(0,0,0,0.4)" : "rgba(0,0,0,0.05)",
-                    border: `1px solid ${mode === "dark" ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"}`,
-                }}
+            <Highlight
+                theme={mode === "dark" ? themes.vsDark : themes.github}
+                code={content.trim()}
+                language={language as any || 'txt'}
             >
-                <code style={{ color: mode === "dark" ? "#e5e5e5" : "#1a1a1a" }}>
-                    {content}
-                </code>
-            </pre>
+                {({ className, style, tokens, getLineProps, getTokenProps }) => (
+                    <pre
+                        className={`p-4 pt-8 rounded-xl overflow-x-auto text-sm ${className}`}
+                        style={{
+                            ...style,
+                            backgroundColor: mode === "dark" ? "rgba(0,0,0,0.4)" : "rgba(0,0,0,0.05)",
+                            border: `1px solid ${mode === "dark" ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"}`,
+                        }}
+                    >
+                        {tokens.map((line, i) => (
+                            <div key={i} {...getLineProps({ line })}>
+                                {line.map((token, key) => (
+                                    <span key={key} {...getTokenProps({ token })} />
+                                ))}
+                            </div>
+                        ))}
+                    </pre>
+                )}
+            </Highlight>
         </div>
     );
 }

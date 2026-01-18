@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, memo } from "react";
 import { motion } from "framer-motion";
 import { useTheme } from "../../context/ThemeContext";
 import { getSkillIcon } from "../../lib/skillIcons";
@@ -8,7 +8,7 @@ interface SkillSliderProps {
   skills: Skill[];
 }
 
-export default function SkillSlider({ skills }: SkillSliderProps) {
+function SkillSlider({ skills }: SkillSliderProps) {
   const { colors, mode } = useTheme();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -94,3 +94,5 @@ export default function SkillSlider({ skills }: SkillSliderProps) {
     </div>
   );
 }
+
+export default memo(SkillSlider);

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import FluidSimulation, { FluidConfig } from '../lib/fluidSimulation';
+import { isCrawler } from '../lib/utils';
 
 // =============================================================================
 // TYPES
@@ -167,8 +168,8 @@ export default function FluidBackground({
         };
     }, [config, enabled, isVisible]);
 
-    // Don't render canvas at all when disabled (saves GPU resources)
-    if (!enabled) {
+    // Don't render canvas at all when disabled (saves GPU resources) or for crawlers
+    if (!enabled || isCrawler()) {
         return null;
     }
 
