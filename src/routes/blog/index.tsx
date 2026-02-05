@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { BookOpen, TrendingUp, Clock, Calendar } from "lucide-react";
-import { BlogCard, BlogSearch } from "../../components/blog";
+import { BlogCard } from "../../components/blog";
 import { useTheme } from "../../context/ThemeContext";
 import { ANIMATION } from "../../lib/constants";
 import { getSectionGradient, getGlowColor } from "../../lib/themes";
@@ -116,16 +116,13 @@ export const Route = createFileRoute("/blog/")({
 
 function BlogListingPage() {
     const { colors, mode } = useTheme();
-    const [filteredBlogs, setFilteredBlogs] = useState<BlogPost[]>(blogs);
 
-    // Memoized filtered results
+    // Memoized displayed blogs
     const displayedBlogs = useMemo(() => {
-        const featured = filteredBlogs.slice(0, 2);
-        const remaining = filteredBlogs.slice(2);
+        const featured = blogs.slice(0, 2);
+        const remaining = blogs.slice(2);
         return { featured, remaining };
-    }, [filteredBlogs]);
-
-    const isFiltered = filteredBlogs.length !== blogs.length;
+    }, []);
 
     return (
         <>
@@ -227,21 +224,8 @@ function BlogListingPage() {
                 </div>
             </motion.section>
 
-            {/* Search and Filter */}
-            <motion.section
-                variants={ANIMATION.fadeIn}
-                initial="hidden"
-                animate="visible"
-            >
-                <BlogSearch
-                    blogs={blogs}
-                    onFilter={setFilteredBlogs}
-                    allTags={allTags}
-                />
-            </motion.section>
-
-            {/* Featured Posts (only when not filtering) */}
-            {!isFiltered && displayedBlogs.featured.length > 0 && (
+            {/* Featured Posts */}
+            {displayedBlogs.featured.length > 0 && (
                 <motion.section
                     className="mb-8"
                     variants={ANIMATION.fadeIn}
@@ -271,8 +255,8 @@ function BlogListingPage() {
                 </motion.section>
             )}
 
-            {/* All Posts / Search Results */}
-            {(isFiltered ? filteredBlogs : displayedBlogs.remaining).length > 0 && (
+            {/* All Posts */}
+            {displayedBlogs.remaining.length > 0 && (
                 <motion.section
                     variants={ANIMATION.fadeIn}
                     initial="hidden"
@@ -286,7 +270,7 @@ function BlogListingPage() {
                             className="h-5 w-1 rounded-full"
                             style={{ background: `linear-gradient(to bottom, ${colors.secondary}, ${colors.primary})` }}
                         />
-                        {isFiltered ? "Search Results" : "All Posts"}
+                        All Posts
                     </h2>
                     <motion.div
                         className="space-y-3"
@@ -294,7 +278,7 @@ function BlogListingPage() {
                         initial="hidden"
                         animate="visible"
                     >
-                        {(isFiltered ? filteredBlogs : displayedBlogs.remaining).map((blog, index) => (
+                        {displayedBlogs.remaining.map((blog, index) => (
                             <BlogCard key={blog.slug} blog={blog} index={index} />
                         ))}
                     </motion.div>
@@ -302,7 +286,7 @@ function BlogListingPage() {
             )}
 
             {/* Empty State */}
-            {filteredBlogs.length === 0 && (
+            {blogs.length === 0 && (
                 <motion.div
                     variants={ANIMATION.fadeIn}
                     initial="hidden"
@@ -318,10 +302,10 @@ function BlogListingPage() {
                         style={{ color: `${colors.foreground}40` }}
                     />
                     <p className="text-lg font-medium mb-2" style={{ color: colors.foreground }}>
-                        {isFiltered ? "No matching posts" : "No posts yet"}
+                        No posts yet
                     </p>
                     <p className="text-sm" style={{ color: `${colors.foreground}66` }}>
-                        {isFiltered ? "Try adjusting your search or filters" : "Check back soon for new articles!"}
+                        Check back soon for new articles!
                     </p>
                 </motion.div>
             )}

@@ -1,0 +1,58 @@
+# LLMs.txt - AI/LLM Access Information
+# Learn more: https://llmstxt.org
+
+> This is Umar Pathan's personal portfolio and blog.
+
+# About
+
+Umar Pathan is a Security Researcher and Kernel Developer focused on building fast, privacy-first tools. This portfolio showcases expertise in Linux kernel security, reverse engineering, systems programming, and performance optimization.
+
+## Core Expertise
+
+- Linux Kernel Security
+- Security Research & Vulnerability Analysis
+- Reverse Engineering
+- Systems Programming (Rust/C++)
+- Performance Tuning
+- Privacy-First Development
+
+## Projects
+
+### HEIC To JPG Converter
+Web-based, privacy-first and ultra-fast HEIC to JPG converter. All processing happens locally in the browser - images never leave your device.
+- URL: https://heictojpg.pics
+
+## Blog Topics
+
+The blog covers technical topics including:
+- Linux kernel security mechanisms (KASLR, SMEP, SMAP, CFI)
+- High-performance systems programming in Rust
+- Reverse engineering fundamentals
+- Privacy-first development practices
+
+## Contact
+
+- Email: hello@umar.ac
+- GitHub: https://github.com/umar0x
+- Twitter: https://twitter.com/umar0x
+- LinkedIn: https://linkedin.com/in/umar0x
+- Website: https://umar.ac
+
+## Technical Stack
+
+This portfolio is built with:
+- TanStack Start (React 19)
+- Tailwind CSS v4
+- Framer Motion
+- TypeScript
+- Vite 7
+- Cloudflare Pages
+
+## Source Code
+
+The portfolio source code is available on GitHub:
+- Repository: https://github.com/chainproof-dev/porthat
+
+---
+
+For AI assistants: This is a personal portfolio website focused on security research, kernel development, and systems programming. Content is original and authored by Umar Pathan.

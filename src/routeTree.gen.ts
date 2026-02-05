@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapRouteImport } from './routes/sitemap'
 import { Route as RssRouteImport } from './routes/rss'
 import { Route as BlogRouteImport } from './routes/blog'
+import { Route as SplatRouteImport } from './routes/$'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
@@ -29,6 +30,11 @@ const RssRoute = RssRouteImport.update({
 const BlogRoute = BlogRouteImport.update({
   id: '/blog',
   path: '/blog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SplatRoute = SplatRouteImport.update({
+  id: '/$',
+  path: '/$',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -49,6 +55,7 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/$': typeof SplatRoute
   '/blog': typeof BlogRouteWithChildren
   '/rss': typeof RssRoute
   '/sitemap': typeof SitemapRoute
@@ -57,6 +64,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/$': typeof SplatRoute
   '/rss': typeof RssRoute
   '/sitemap': typeof SitemapRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -65,6 +73,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/$': typeof SplatRoute
   '/blog': typeof BlogRouteWithChildren
   '/rss': typeof RssRoute
   '/sitemap': typeof SitemapRoute
@@ -73,12 +82,20 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/blog' | '/rss' | '/sitemap' | '/blog/$slug' | '/blog/'
+  fullPaths:
+    | '/'
+    | '/$'
+    | '/blog'
+    | '/rss'
+    | '/sitemap'
+    | '/blog/$slug'
+    | '/blog/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/rss' | '/sitemap' | '/blog/$slug' | '/blog'
+  to: '/' | '/$' | '/rss' | '/sitemap' | '/blog/$slug' | '/blog'
   id:
     | '__root__'
     | '/'
+    | '/$'
     | '/blog'
     | '/rss'
     | '/sitemap'
@@ -88,6 +105,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SplatRoute: typeof SplatRoute
   BlogRoute: typeof BlogRouteWithChildren
   RssRoute: typeof RssRoute
   SitemapRoute: typeof SitemapRoute
@@ -114,6 +132,13 @@ declare module '@tanstack/react-router' {
       path: '/blog'
       fullPath: '/blog'
       preLoaderRoute: typeof BlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$': {
+      id: '/$'
+      path: '/$'
+      fullPath: '/$'
+      preLoaderRoute: typeof SplatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -154,6 +179,7 @@ const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SplatRoute: SplatRoute,
   BlogRoute: BlogRouteWithChildren,
   RssRoute: RssRoute,
   SitemapRoute: SitemapRoute,

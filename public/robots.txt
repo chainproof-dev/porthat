@@ -2,5 +2,18 @@
 User-agent: *
 Allow: /
 
-# Sitemap (uncomment and update when you have a domain)
-# Sitemap: https://yourdomain.com/sitemap.xml
+# Sitemaps
+Sitemap: https://umar.ac/sitemap.xml
+
+# LLM/AI Information (llmstxt.org)
+# Provides structured information about this site for AI assistants
+# See: https://llmstxt.org
+LLMs-Txt: https://umar.ac/llms.txt
+
+# Crawl-delay for respectful crawling (optional, not all bots honor this)
+# Crawl-delay: 1
+
+# Block common bot paths
+Disallow: /api/
+Disallow: /_next/
+Disallow: /.well-known/

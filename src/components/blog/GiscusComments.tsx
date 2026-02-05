@@ -18,6 +18,7 @@ interface GiscusCommentsProps {
  * Giscus Comments Component
  * 
  * Integrates GitHub Discussions as a comment system.
+ * Theme syncs via postMessage without reloading the iframe.
  * 
  * Setup Instructions:
  * 1. Go to https://giscus.app
@@ -35,12 +36,11 @@ export default function GiscusComments({
 }: GiscusCommentsProps) {
     const { mode } = useTheme();
     const containerRef = useRef<HTMLDivElement>(null);
+    const isScriptLoaded = useRef(false);
 
+    // Load Giscus script only once on mount
     useEffect(() => {
-        if (!containerRef.current) return;
-
-        // Clear existing comments when theme changes
-        containerRef.current.innerHTML = "";
+        if (!containerRef.current || isScriptLoaded.current) return;
 
         // Create script element
         const script = document.createElement("script");
@@ -57,23 +57,26 @@ export default function GiscusComments({
         if (term) {
             script.setAttribute("data-term", term);
         }
-        script.setAttribute("data-strict", "0");
+        script.setAttribute("data-strict", "1");
         script.setAttribute("data-reactions-enabled", "1");
         script.setAttribute("data-emit-metadata", "0");
         script.setAttribute("data-input-position", "top");
+        // Use initial theme based on current mode
         script.setAttribute("data-theme", mode === "dark" ? "dark_dimmed" : "light");
         script.setAttribute("data-lang", "en");
         script.setAttribute("data-loading", "lazy");
 
         containerRef.current.appendChild(script);
+        isScriptLoaded.current = true;
 
         return () => {
             // Cleanup on unmount
             if (containerRef.current) {
                 containerRef.current.innerHTML = "";
+                isScriptLoaded.current = false;
             }
         };
-    }, [repo, repoId, category, categoryId, term, mode]);
+    }, [repo, repoId, category, categoryId, term]); // Intentionally exclude mode
 
     // Listen for theme changes and update Giscus
     useEffect(() => {

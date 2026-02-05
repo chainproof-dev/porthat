@@ -1,4 +1,4 @@
-import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router";
+import { HeadContent, Scripts, createRootRoute, Outlet } from "@tanstack/react-router";
 import appCss from "../styles.css?url";
 import portfolioData from "../data/data.json";
 import {
@@ -8,6 +8,8 @@ import {
 } from "../lib/seo";
 import { generateHomePageSchemas } from "../lib/schema";
 import { JsonLd } from "../components/seo/JsonLd";
+import UmamiAnalytics from "../components/common/UmamiAnalytics";
+import NotFound from "../components/common/NotFound";
 import type { Profile } from "../types/portfolio";
 
 // =============================================================================
@@ -44,19 +46,21 @@ export const Route = createRootRoute({
     ),
     links: generateLinkTags(seoConfig, profile as Profile, appCss),
   }),
-  shellComponent: RootDocument,
+  component: RootComponent,
+  notFoundComponent: NotFound,
 });
 
 // =============================================================================
-// ROOT DOCUMENT COMPONENT
+// ROOT COMPONENT
 // =============================================================================
 
-function RootDocument({ children }: { children: React.ReactNode }) {
+function RootComponent() {
   return (
     <html lang="en">
       <head>
         <HeadContent />
         <JsonLd data={schemas} />
+        <UmamiAnalytics />
         {/* Skip to content link styles */}
         <style>{`
           .skip-to-content {
@@ -85,10 +89,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           Skip to main content
         </a>
         <main id="main-content">
-          {children}
+          <Outlet />
         </main>
         <Scripts />
       </body>
     </html>
   );
 }
+

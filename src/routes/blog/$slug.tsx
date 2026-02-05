@@ -2,7 +2,7 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { Calendar, Clock, ArrowLeft, Tag } from "lucide-react";
 import { Link } from "@tanstack/react-router";
-import { BlogContent, TableOfContents, ReadingProgress, ShareButtons, CommentsPlaceholder } from "../../components/blog";
+import { BlogContent, TableOfContents, ReadingProgress, ShareButtons, GiscusComments } from "../../components/blog";
 import { useTheme } from "../../context/ThemeContext";
 import { ANIMATION } from "../../lib/constants";
 import { getSectionGradient, getGlowColor } from "../../lib/themes";
@@ -262,7 +262,31 @@ function BlogPostContent() {
             )}
 
             {/* Comments Section */}
-            <CommentsPlaceholder />
+            <section className="mt-8">
+                <h2
+                    className="text-lg font-semibold mb-4 flex items-center gap-2"
+                    style={{ color: colors.foreground }}
+                >
+                    <div
+                        className="h-5 w-1 rounded-full"
+                        style={{ background: `linear-gradient(to bottom, ${colors.secondary}, ${colors.primary})` }}
+                    />
+                    Comments
+                </h2>
+                <p
+                    className="text-sm mb-4"
+                    style={{ color: `${colors.foreground}66` }}
+                >
+                    Login with GitHub to comment. Be respectful ❤️
+                </p>
+                <GiscusComments
+                    repo={import.meta.env.VITE_GISCUS_REPO || "chainproof-dev/porthat"}
+                    repoId={import.meta.env.VITE_GISCUS_REPO_ID || "R_kgDOQ61GQw"}
+                    category={import.meta.env.VITE_GISCUS_CATEGORY || "Blog Comments"}
+                    categoryId={import.meta.env.VITE_GISCUS_CATEGORY_ID || "DIC_kwDOQ61GQ84C1bZ2"}
+                    term={`post-${blog.slug}`}
+                />
+            </section>
 
             {/* Back to Blog */}
             <motion.div variants={ANIMATION.fadeIn} className="mt-8 pt-6 border-t" style={{ borderColor: mode === "dark" ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)" }}>

@@ -44,7 +44,7 @@ function BlogLayoutContent({ children }: BlogLayoutProps) {
                     borderColor: mode === "dark" ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)",
                 }}
             >
-                <div className="max-w-4xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
+                <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
                     <Link
                         to="/"
                         className="flex items-center gap-2 text-sm font-medium transition-colors hover:opacity-80"
@@ -109,7 +109,7 @@ function BlogLayoutContent({ children }: BlogLayoutProps) {
 
             {/* Main content */}
             <motion.main
-                className="relative max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 pb-24 z-10"
+                className="relative max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12 pb-24 z-10"
                 initial="hidden"
                 animate="visible"
                 variants={ANIMATION.stagger}
